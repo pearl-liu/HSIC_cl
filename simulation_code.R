@@ -152,7 +152,7 @@ sim_func <- function(i) {
 
   indep_idx1 <- seq(from=1, to=m*d-d+1, by=d)
   indep_idx2 <- seq(from=2, to=m*d-d+2, by=d)
-  indep_idx3 <- seq(from=3, to=m*d, by=d)
+  indep_idx3 <- seq(from=3, to=m*d, by=d)   # Here we assume cluster size d=3 for HSIC_mean and HSIC_cat
   
   #### Perform HSIC_mean: Use the mean across observations from each cluster ####
   expo_matrix.indep <- (expo_matrix[indep_idx1,] + expo_matrix[indep_idx2,] +

@@ -118,3 +118,65 @@ power_plot <- function(power_result, kernel_type, rho_c,
 }
 
 
+## Get HSIC statistic from centered kernel matrices
+HSIC_stat <- function(pheno.K.c, expo.K.c) {
+  test_stat <- sum(sum(t(pheno.K.c) * expo.K.c))/nrow(pheno.K.c)
+  return(test_stat)
+}
+
+
+## Get permuted data set from clustered data (cluster size  = 3)
+permute_data <- function(data_mt, m, d) {
+  cluster_start_idx <- seq(1, m*d-d+1, by=d)
+  permute_cl_idx <- sample(cluster_start_idx)
+  permute_obs_idx <- as.vector(rbind(permute_cl_idx,
+                                     permute_cl_idx+1,
+                                     permute_cl_idx+2))
+  return(data_mt[permute_obs_idx,])
+}
+
+
+## Perform permutation-based HSIC test
+HSIC_perm_test <-  function(n_perm, expo_matrix, pheno_matrix,
+                            kernel_type, m, d){  
+  
+  if (kernel_type == 'gaussian')  {
+    expo.K <- kern_g(expo_matrix)    # gaussian kernel
+    pheno.K <- kern_g(pheno_matrix)
+  }  else if (kernel_type ==  'linear') {
+    expo.K <- expo_matrix %*% t(expo_matrix)  # linear kernel
+    pheno.K <- pheno_matrix %*% t(pheno_matrix)
+  }
+  
+  I.m=diag(1,m*d)
+  I.1=rep(1,m*d)
+  H=I.m-I.1%*%t(I.1)/(m*d)
+  
+  pheno.K.c <- H%*% pheno.K %*%H   # centering the kernel matrices
+  expo.K.c <- H%*% expo.K %*%H
+  
+  obs_stat <- HSIC_stat(pheno.K.c, expo.K.c) 
+  
+  perm_stat_vec <- rep(NA, n_perm)
+  
+  for (i in 1:n_perm) {
+    perm_expo_matrix <- permute_data(expo_matrix, m, d)  
+    
+    if (kernel_type == 'gaussian')  {
+      expo.K <- kern_g(perm_expo_matrix)    # gaussian kernel
+    }  else if (kernel_type ==  'linear') {
+      expo.K <- perm_expo_matrix %*% t(perm_expo_matrix)  # linear kernel
+    }
+  
+    expo.K.c <- H%*% expo.K %*%H
+    
+    perm_stat_vec[i] <- HSIC_stat(pheno.K.c, expo.K.c) 
+    
+  }
+  p_value <- sum(perm_stat_vec >= obs_stat)/n_perm
+  
+  return(p_value)
+  
+}
+
+
