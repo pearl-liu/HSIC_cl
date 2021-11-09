@@ -22,7 +22,7 @@ HSIC_cl <- function(m, expo.K.c, outcome.K.c, kernel_type = NULL, n_expo = NULL,
   outcome.K.decomp <- chol.de(outcome.K.c)
   expo.K.decomp <- chol.de(expo.K.c)
   
-  if (is.null(kernel_type) | kernel_type != 'linear') {
+  if (is.null(kernel_type) || kernel_type != 'linear') {
     R1 <- outcome.K.decomp$R
     R2 <- expo.K.decomp$R 
   } else if (kernel_type == 'linear') {

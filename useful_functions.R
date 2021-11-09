@@ -126,19 +126,19 @@ HSIC_stat <- function(pheno.K.c, expo.K.c) {
 
 
 ## Get permuted data set from clustered data (cluster size  = 3)
-permute_data <- function(data_mt, m, d) {
+permute_idx <- function(data_mt, m, d) {
   cluster_start_idx <- seq(1, m*d-d+1, by=d)
   permute_cl_idx <- sample(cluster_start_idx)
   permute_obs_idx <- as.vector(rbind(permute_cl_idx,
                                      permute_cl_idx+1,
                                      permute_cl_idx+2))
-  return(data_mt[permute_obs_idx,])
+  return(permute_obs_idx)
 }
 
 
 ## Perform permutation-based HSIC test
 HSIC_perm_test <-  function(n_perm, expo_matrix, pheno_matrix,
-                            kernel_type, m, d){  
+                             kernel_type, m, d){
   
   if (kernel_type == 'gaussian')  {
     expo.K <- kern_g(expo_matrix)    # gaussian kernel
@@ -148,26 +148,18 @@ HSIC_perm_test <-  function(n_perm, expo_matrix, pheno_matrix,
     pheno.K <- pheno_matrix %*% t(pheno_matrix)
   }
   
-  I.m=diag(1,m*d)
-  I.1=rep(1,m*d)
-  H=I.m-I.1%*%t(I.1)/(m*d)
-  
-  pheno.K.c <- H%*% pheno.K %*%H   # centering the kernel matrices
+  pheno.K.c <- H%*% pheno.K %*%H
   expo.K.c <- H%*% expo.K %*%H
   
   obs_stat <- HSIC_stat(pheno.K.c, expo.K.c) 
   
+  
   perm_stat_vec <- rep(NA, n_perm)
   
   for (i in 1:n_perm) {
-    perm_expo_matrix <- permute_data(expo_matrix, m, d)  
+    perm_idx <- permute_idx(expo_matrix, m, d)  
     
-    if (kernel_type == 'gaussian')  {
-      expo.K <- kern_g(perm_expo_matrix)    # gaussian kernel
-    }  else if (kernel_type ==  'linear') {
-      expo.K <- perm_expo_matrix %*% t(perm_expo_matrix)  # linear kernel
-    }
-  
+    expo.K <- expo.K[perm_idx, perm_idx]
     expo.K.c <- H%*% expo.K %*%H
     
     perm_stat_vec[i] <- HSIC_stat(pheno.K.c, expo.K.c) 
@@ -178,5 +170,4 @@ HSIC_perm_test <-  function(n_perm, expo_matrix, pheno_matrix,
   return(p_value)
   
 }
-
 
