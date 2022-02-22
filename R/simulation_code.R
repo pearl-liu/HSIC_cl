@@ -6,8 +6,8 @@
 library(argparse)
 library(MASS)
 library(CompQuadForm)
-source("HSIC_for_clustered_data.R")
-source("useful_functions.R")
+source("R/HSIC_for_clustered_data.R")
+source("R/useful_functions.R")
 
 
 
