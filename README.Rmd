@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE,
 * References
 
 ## Overview
-We propose a kernel-based independence test, **HSIC~cl~**, to evaluate the generalized association between two multivariate (and potentially high-dimensional) variables based on cluster-correlated data. This test is built upon the Hilbert-Schmidt Independence Criterion (HSIC) proposed by Gretton et al. (2005), while making proper accommodation for clustered data. It makes no assumption on the distributions of the variables or the nature of the dependence. **HSIC~cl~** is implemented as the `HSIC_cl()` function in R language. We introduce the usage of the `HSIC_cl()` function and demonstrate how to replicate the simulation results in our paper.
+We propose a kernel-based independence test, **HSIC~cl~**, to evaluate the generalized association between two multivariate (and potentially high-dimensional) variables based on cluster-correlated data. This test is built upon the Hilbert-Schmidt Independence Criterion (HSIC) proposed by Gretton et al. (2005), while making proper accommodation for clustered data. It makes no assumption on the distributions of the variables or the nature of the dependence. **HSIC~cl~** is implemented as the `HSIC_cl()` function in R language. We introduce the usage of the `HSIC_cl()` function and demonstrate how to replicate the simulation results in [our paper](https://proceedings.neurips.cc/paper/2021/hash/51be2fed6c55f5aa0c16ff14c140b187-Abstract.html).
 
 ## Requirements
 The CompQuadForm R package is required for the `HSIC_cl()` function. R packages used in the simulation section include MASS, reshape2 and ggplot2. All the packages are available on [CRAN](https://cran.r-project.org/).
@@ -33,7 +33,7 @@ install.packages("CompQuadForm")
 
 To source the `HSIC_cl()` function, we can run the following command:
 ```{r message=FALSE, warning=FALSE}
-source("HSIC_for_clustered_data.R")
+source("R/HSIC_for_clustered_data.R")
 ```
 
 
@@ -47,7 +47,7 @@ are independent from each other while having identical within-cluster correlatio
 To demonstrate the usage of **HSIC~cl~**, we simulate multivariate normal observations $\{(X_j, Y_j) \}_{j=1}^n$ with clustered correlation, where $X \in \mathbb{R}^{20}$ and $Y \in \mathbb{R}^{20}$, according to Section 4.1.1 of our paper. Here we let the exposure $X$ be independent from the outcome $Y$.
 ```{r message=FALSE, warning=FALSE}
 library(MASS)
-source("useful_functions.R")
+source("R/useful_functions.R")
 
 ## Baseline parameters
 m <- 100 # number of clusters
@@ -117,7 +117,7 @@ p_value_orig
 
 ## Reproduction of simulation results
 
-We provide example code: simulation_code.R to reproduce simulation results in Section 4.1.2 of our paper. 
+We provide example code: R/simulation_code.R to reproduce simulation results in Section 4.1.2 of our paper. 
 
 For illustrative purposes, we only consider $m=500$, $\rho_c=0.5$ with 50 simulated data sets under type I error simulation and Power Scenario 1. Results for the other settings can be produced similarly by altering the input arguments.
 
@@ -136,37 +136,37 @@ The following commands shall be run in the Bash environment (from command line).
 # n_sim: number of data sets to simulate
 # output_file: name of the output file
 
-Rscript simulation_code.R --power=0 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv' 
+Rscript R/simulation_code.R --power=0 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv' 
 
-Rscript simulation_code.R --power=0 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv' 
+Rscript R/simulation_code.R --power=0 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv' 
 
 ```
 
 ### Simulation to evaluate power of **HSIC~cl~** and competing methods (Figure 2)
 ```{r, engine = 'bash', eval = FALSE}
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.1 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.1.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.1 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.1.csv' 
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.2 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.2.csv'  
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.2 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.2.csv'  
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.3 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.3.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.3 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.3.csv' 
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.4 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.4.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.4 --kernel='linear' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.4.csv' 
 
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.1 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.1.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.1 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.1.csv' 
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.2 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.2.csv'  
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.2 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.2.csv'  
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.3 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.3.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.3 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.3.csv' 
 
-Rscript simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.4 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.4.csv' 
+Rscript R/simulation_code.R --power=1 --m=500 --d=3 --n_expo=20 --rho_c=0.5 --gamma=0.4 --kernel='gaussian' --seed_num=123 --n_sim=50 --output_file='Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.4.csv' 
 
 
 ```
 
 
 ### Report the empirical type I error rate and power
-Example output files of the above Bash commands are provided in the "code" folder. We next return to R and analyze these output files.
+Example output files of the above Bash commands are provided in the "Simulation_results" folder. We next return to R and analyze these output files.
 
 The empirical type I error rate at significance level $\alpha$ is reported as following:
 ```{r message=FALSE, warning=FALSE}
@@ -175,10 +175,10 @@ library(knitr)
 type_I_error_result <- data.frame('alpha'=rep(c(0.1, 0.05),each=2),'rho_c'=0.5,
                                   'kernel'=rep(c('Linear','Gaussian'),2), 'HSIC_orig'=NA,
                                   'HSIC_cl'=NA)
-type_I_error_result[1,4:5] <- result_eval(power_ind=0,   "example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv", sig_level=0.1)
-type_I_error_result[3,4:5] <- result_eval(power_ind=0,   "example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv", sig_level=0.05)
-type_I_error_result[2,4:5] <- result_eval(power_ind=0,   "example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv", sig_level=0.1)
-type_I_error_result[4,4:5] <- result_eval(power_ind=0,   "example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv", sig_level=0.05)
+type_I_error_result[1,4:5] <- result_eval(power_ind=0,   "Simulation_results/example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv", sig_level=0.1)
+type_I_error_result[3,4:5] <- result_eval(power_ind=0,   "Simulation_results/example_type_I_error_result_500cl_20expo_20out_linearK_rho0.5.csv", sig_level=0.05)
+type_I_error_result[2,4:5] <- result_eval(power_ind=0,   "Simulation_results/example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv", sig_level=0.1)
+type_I_error_result[4,4:5] <- result_eval(power_ind=0,   "Simulation_results/example_type_I_error_result_500cl_20expo_20out_gaussK_rho0.5.csv", sig_level=0.05)
 
 kable(type_I_error_result, caption = 'Example empirical type I error rate', digits = 2,
       col.names = c('$\\alpha$', '$\\rho_c$', 'Kernel', 'HSIC~orig~',
@@ -192,10 +192,10 @@ The empirical power at a significance level of 0.05 (under Power Scenario 1) is 
 # linear kernel
 power_result_linear <- data.frame('Method'=c('HSIC_cl','HSIC_cat','HSIC_mean'),
                                   'effsize1'=NA, 'effsize2'=NA, 'effsize3'=NA, 'effsize4'=NA)
-power_result_linear[,2] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.1.csv", sig_level=0.05)
-power_result_linear[,3] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.2.csv", sig_level=0.05)
-power_result_linear[,4] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.3.csv", sig_level=0.05)
-power_result_linear[,5] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.4.csv", sig_level=0.05)
+power_result_linear[,2] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.1.csv", sig_level=0.05)
+power_result_linear[,3] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.2.csv", sig_level=0.05)
+power_result_linear[,4] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.3.csv", sig_level=0.05)
+power_result_linear[,5] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_linearK_rho0.5_gamma0.4.csv", sig_level=0.05)
 
 power_plot(power_result_linear, kernel_type = 'linear kernel', rho_c=0.5,
                        effect_size_input = c("effsize1", "effsize2", "effsize3","effsize4"), 
@@ -204,10 +204,10 @@ power_plot(power_result_linear, kernel_type = 'linear kernel', rho_c=0.5,
 # Gaussian kernel
 power_result_gauss <- data.frame('Method'=c('HSIC_cl','HSIC_cat','HSIC_mean'),
                                   'effsize1'=NA, 'effsize2'=NA, 'effsize3'=NA, 'effsize4'=NA)
-power_result_gauss[,2] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.1.csv", sig_level=0.05)
-power_result_gauss[,3] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.2.csv", sig_level=0.05)
-power_result_gauss[,4] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.3.csv", sig_level=0.05)
-power_result_gauss[,5] <- result_eval(power_ind=1,   "example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.4.csv", sig_level=0.05)
+power_result_gauss[,2] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.1.csv", sig_level=0.05)
+power_result_gauss[,3] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.2.csv", sig_level=0.05)
+power_result_gauss[,4] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.3.csv", sig_level=0.05)
+power_result_gauss[,5] <- result_eval(power_ind=1,   "Simulation_results/example_power_result_500cl_20expo_20out_gaussK_rho0.5_gamma0.4.csv", sig_level=0.05)
 
 power_plot(power_result_gauss, kernel_type = 'Gaussian kernel', rho_c=0.5,
                        effect_size_input = c("effsize1", "effsize2", "effsize3", "effsize4"), 
@@ -216,7 +216,7 @@ power_plot(power_result_gauss, kernel_type = 'Gaussian kernel', rho_c=0.5,
 ```
 
 ## License
-All content in the "code" folder is licensed under the GPL-3.0 license.
+All content is licensed under the GPL-3.0 license.
 
 
 ## References
